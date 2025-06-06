@@ -1,0 +1,602 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 16.9 (Ubuntu 16.9-0ubuntu0.24.10.1)
+-- Dumped by pg_dump version 16.9 (Ubuntu 16.9-0ubuntu0.24.10.1)
+
+-- Started on 2025-06-06 22:07:17 MSK
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+ALTER TABLE IF EXISTS ONLY public.workshops DROP CONSTRAINT IF EXISTS workshops_id_workshop_type_fkey;
+ALTER TABLE IF EXISTS ONLY public.products DROP CONSTRAINT IF EXISTS products_id_product_type_fkey;
+ALTER TABLE IF EXISTS ONLY public.products DROP CONSTRAINT IF EXISTS products_id_material_fkey;
+ALTER TABLE IF EXISTS ONLY public.product_workshops DROP CONSTRAINT IF EXISTS product_workshops_id_workshop_fkey;
+ALTER TABLE IF EXISTS ONLY public.product_workshops DROP CONSTRAINT IF EXISTS product_workshops_id_product_fkey;
+ALTER TABLE IF EXISTS ONLY public.workshops DROP CONSTRAINT IF EXISTS workshops_pkey;
+ALTER TABLE IF EXISTS ONLY public.workshop_types DROP CONSTRAINT IF EXISTS workshop_types_pkey;
+ALTER TABLE IF EXISTS ONLY public.products DROP CONSTRAINT IF EXISTS products_pkey;
+ALTER TABLE IF EXISTS ONLY public.product_workshops DROP CONSTRAINT IF EXISTS product_workshops_pkey;
+ALTER TABLE IF EXISTS ONLY public.product_types DROP CONSTRAINT IF EXISTS product_types_pkey;
+ALTER TABLE IF EXISTS ONLY public.materials DROP CONSTRAINT IF EXISTS materials_pkey;
+DROP TABLE IF EXISTS public.workshops;
+DROP TABLE IF EXISTS public.workshop_types;
+DROP TABLE IF EXISTS public.products;
+DROP TABLE IF EXISTS public.product_workshops;
+DROP TABLE IF EXISTS public.product_types;
+DROP TABLE IF EXISTS public.materials;
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 216 (class 1259 OID 20536)
+-- Name: materials; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.materials (
+    id integer NOT NULL,
+    type character varying,
+    loss_percentage real
+);
+
+
+ALTER TABLE public.materials OWNER TO postgres;
+
+--
+-- TOC entry 215 (class 1259 OID 20535)
+-- Name: materials_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.materials ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.materials_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- TOC entry 218 (class 1259 OID 20544)
+-- Name: product_types; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.product_types (
+    id integer NOT NULL,
+    type character varying,
+    coef real
+);
+
+
+ALTER TABLE public.product_types OWNER TO postgres;
+
+--
+-- TOC entry 217 (class 1259 OID 20543)
+-- Name: product_types_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.product_types ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.product_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- TOC entry 226 (class 1259 OID 20576)
+-- Name: product_workshops; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.product_workshops (
+    id integer NOT NULL,
+    id_product integer,
+    id_workshop integer,
+    production_time_hours real
+);
+
+
+ALTER TABLE public.product_workshops OWNER TO postgres;
+
+--
+-- TOC entry 225 (class 1259 OID 20575)
+-- Name: product_workshops_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.product_workshops ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.product_workshops_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- TOC entry 220 (class 1259 OID 20552)
+-- Name: products; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.products (
+    id integer NOT NULL,
+    id_product_type integer,
+    id_material integer,
+    article integer,
+    name character varying,
+    min_cost real
+);
+
+
+ALTER TABLE public.products OWNER TO postgres;
+
+--
+-- TOC entry 219 (class 1259 OID 20551)
+-- Name: products_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.products ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.products_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- TOC entry 222 (class 1259 OID 20560)
+-- Name: workshop_types; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.workshop_types (
+    id integer NOT NULL,
+    type character varying
+);
+
+
+ALTER TABLE public.workshop_types OWNER TO postgres;
+
+--
+-- TOC entry 221 (class 1259 OID 20559)
+-- Name: workshop_types_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.workshop_types ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.workshop_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- TOC entry 224 (class 1259 OID 20568)
+-- Name: workshops; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.workshops (
+    id integer NOT NULL,
+    id_workshop_type integer,
+    name character varying,
+    workers_count integer
+);
+
+
+ALTER TABLE public.workshops OWNER TO postgres;
+
+--
+-- TOC entry 223 (class 1259 OID 20567)
+-- Name: workshops_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.workshops ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.workshops_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- TOC entry 3463 (class 0 OID 20536)
+-- Dependencies: 216
+-- Data for Name: materials; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.materials OVERRIDING SYSTEM VALUE VALUES (1, 'Мебельный щит из массива дерева', 0.008) ON CONFLICT DO NOTHING;
+INSERT INTO public.materials OVERRIDING SYSTEM VALUE VALUES (2, 'Ламинированное ДСП', 0.007) ON CONFLICT DO NOTHING;
+INSERT INTO public.materials OVERRIDING SYSTEM VALUE VALUES (3, 'Фанера', 0.0055) ON CONFLICT DO NOTHING;
+INSERT INTO public.materials OVERRIDING SYSTEM VALUE VALUES (4, 'МДФ', 0.003) ON CONFLICT DO NOTHING;
+
+
+--
+-- TOC entry 3465 (class 0 OID 20544)
+-- Dependencies: 218
+-- Data for Name: product_types; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.product_types OVERRIDING SYSTEM VALUE VALUES (1, 'Гостиные', 3.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_types OVERRIDING SYSTEM VALUE VALUES (2, 'Прихожие', 5.6) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_types OVERRIDING SYSTEM VALUE VALUES (3, 'Мягкая мебель', 3) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_types OVERRIDING SYSTEM VALUE VALUES (4, 'Кровати', 4.7) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_types OVERRIDING SYSTEM VALUE VALUES (5, 'Шкафы', 1.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_types OVERRIDING SYSTEM VALUE VALUES (6, 'Комоды', 2.3) ON CONFLICT DO NOTHING;
+
+
+--
+-- TOC entry 3473 (class 0 OID 20576)
+-- Dependencies: 226
+-- Data for Name: product_workshops; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (1, 10, 8, 2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (2, 20, 8, 2.7) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (3, 6, 9, 4.2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (4, 7, 9, 4.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (5, 8, 9, 4.7) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (6, 9, 9, 4) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (7, 11, 9, 5.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (8, 2, 10, 0.3) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (9, 3, 10, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (10, 5, 10, 0.3) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (11, 10, 10, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (12, 14, 10, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (13, 20, 10, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (14, 1, 4, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (15, 2, 4, 0.3) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (16, 3, 4, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (17, 4, 4, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (18, 5, 4, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (19, 6, 4, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (20, 7, 4, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (21, 8, 4, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (22, 9, 4, 0.3) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (23, 10, 4, 0.6) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (24, 11, 4, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (25, 12, 4, 0.8) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (26, 13, 4, 2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (27, 14, 4, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (28, 15, 4, 0.3) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (29, 16, 4, 1.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (30, 17, 4, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (31, 18, 4, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (32, 19, 4, 0.4) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (33, 20, 4, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (34, 1, 6, 0.3) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (35, 2, 6, 0.4) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (36, 5, 6, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (37, 6, 6, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (38, 7, 6, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (39, 8, 6, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (40, 9, 6, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (41, 10, 6, 0.4) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (42, 13, 6, 1.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (43, 15, 6, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (44, 17, 6, 2.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (45, 18, 6, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (46, 19, 6, 0.4) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (47, 20, 6, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (48, 1, 1, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (49, 2, 1, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (50, 5, 1, 1.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (51, 8, 1, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (52, 14, 1, 2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (53, 15, 1, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (54, 20, 1, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (55, 1, 3, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (56, 2, 3, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (57, 3, 3, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (58, 4, 3, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (59, 5, 3, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (60, 6, 3, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (61, 7, 3, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (62, 8, 3, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (63, 9, 3, 0.7) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (64, 10, 3, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (65, 11, 3, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (66, 12, 3, 1.1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (67, 13, 3, 2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (68, 14, 3, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (69, 15, 3, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (70, 16, 3, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (71, 17, 3, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (72, 18, 3, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (73, 19, 3, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (74, 20, 3, 0.6) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (75, 1, 2, 0.4) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (76, 2, 2, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (77, 5, 2, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (78, 8, 2, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (79, 14, 2, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (80, 15, 2, 0.7) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (81, 20, 2, 0.4) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (82, 2, 11, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (83, 3, 11, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (84, 5, 11, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (85, 6, 11, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (86, 7, 11, 0.3) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (87, 12, 11, 0.8) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (88, 13, 11, 0.3) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (89, 14, 11, 1.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (90, 15, 11, 0.3) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (91, 16, 11, 2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (92, 18, 11, 0.3) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (93, 20, 11, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (94, 1, 7, 1.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (95, 2, 7, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (96, 5, 7, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (97, 7, 7, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (98, 8, 7, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (99, 9, 7, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (100, 15, 7, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (101, 16, 7, 1) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (102, 17, 7, 3) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (103, 18, 7, 2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (104, 19, 7, 2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (105, 1, 5, 2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (106, 2, 5, 2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (107, 5, 5, 2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (108, 6, 5, 2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (109, 7, 5, 2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (110, 15, 5, 2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (111, 18, 5, 2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (112, 19, 5, 2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (113, 1, 12, 0.3) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (114, 4, 12, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (115, 5, 12, 0.2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (116, 6, 12, 0.3) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (117, 7, 12, 0.2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (118, 8, 12, 0.3) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (119, 9, 12, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (120, 10, 12, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (121, 11, 12, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (122, 12, 12, 0.3) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (123, 13, 12, 0.2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (124, 14, 12, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (125, 15, 12, 0.2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (126, 16, 12, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (127, 17, 12, 0.5) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (128, 18, 12, 0.2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (129, 19, 12, 0.2) ON CONFLICT DO NOTHING;
+INSERT INTO public.product_workshops OVERRIDING SYSTEM VALUE VALUES (130, 20, 12, 0.3) ON CONFLICT DO NOTHING;
+
+
+--
+-- TOC entry 3467 (class 0 OID 20552)
+-- Dependencies: 220
+-- Data for Name: products; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.products OVERRIDING SYSTEM VALUE VALUES (1, 1, 1, 1549922, 'Комплект мебели для гостиной Ольха горная', 160507) ON CONFLICT DO NOTHING;
+INSERT INTO public.products OVERRIDING SYSTEM VALUE VALUES (2, 1, 1, 1018556, 'Стенка для гостиной Вишня темная', 216907) ON CONFLICT DO NOTHING;
+INSERT INTO public.products OVERRIDING SYSTEM VALUE VALUES (3, 2, 2, 3028272, 'Прихожая Венге Винтаж', 24970) ON CONFLICT DO NOTHING;
+INSERT INTO public.products OVERRIDING SYSTEM VALUE VALUES (4, 2, 2, 3029272, 'Тумба с вешалкой Дуб натуральный', 18206) ON CONFLICT DO NOTHING;
+INSERT INTO public.products OVERRIDING SYSTEM VALUE VALUES (5, 2, 1, 3028248, 'Прихожая-комплект Дуб темный', 177509) ON CONFLICT DO NOTHING;
+INSERT INTO public.products OVERRIDING SYSTEM VALUE VALUES (6, 3, 1, 7118827, 'Диван-кровать угловой Книжка', 85900) ON CONFLICT DO NOTHING;
+INSERT INTO public.products OVERRIDING SYSTEM VALUE VALUES (7, 3, 1, 7137981, 'Диван модульный Телескоп', 75900) ON CONFLICT DO NOTHING;
+INSERT INTO public.products OVERRIDING SYSTEM VALUE VALUES (8, 3, 1, 7029787, 'Диван-кровать Соло', 120345) ON CONFLICT DO NOTHING;
+INSERT INTO public.products OVERRIDING SYSTEM VALUE VALUES (9, 3, 3, 7758953, 'Детский диван Выкатной', 25990) ON CONFLICT DO NOTHING;
+INSERT INTO public.products OVERRIDING SYSTEM VALUE VALUES (10, 4, 1, 6026662, 'Кровать с подъемным механизмом с матрасом 1600х2000 Венге', 69500) ON CONFLICT DO NOTHING;
+INSERT INTO public.products OVERRIDING SYSTEM VALUE VALUES (11, 4, 2, 6159043, 'Кровать с матрасом 90х2000 Венге', 55600) ON CONFLICT DO NOTHING;
+INSERT INTO public.products OVERRIDING SYSTEM VALUE VALUES (12, 4, 2, 6588376, 'Кровать универсальная Дуб натуральный', 37900) ON CONFLICT DO NOTHING;
+INSERT INTO public.products OVERRIDING SYSTEM VALUE VALUES (13, 4, 3, 6758375, 'Кровать с ящиками Ясень белый', 46750) ON CONFLICT DO NOTHING;
+INSERT INTO public.products OVERRIDING SYSTEM VALUE VALUES (14, 5, 2, 2759324, 'Шкаф-купе 3-х дверный Сосна белая', 131560) ON CONFLICT DO NOTHING;
+INSERT INTO public.products OVERRIDING SYSTEM VALUE VALUES (15, 5, 1, 2118827, 'Стеллаж Бук натуральный', 38700) ON CONFLICT DO NOTHING;
+INSERT INTO public.products OVERRIDING SYSTEM VALUE VALUES (16, 5, 3, 2559898, 'Шкаф 4 дверный с ящиками Ясень серый', 160151) ON CONFLICT DO NOTHING;
+INSERT INTO public.products OVERRIDING SYSTEM VALUE VALUES (17, 5, 3, 2259474, 'Шкаф-пенал Береза белый', 40500) ON CONFLICT DO NOTHING;
+INSERT INTO public.products OVERRIDING SYSTEM VALUE VALUES (18, 6, 1, 4115947, 'Комод 6 ящиков Вишня светлая', 61235) ON CONFLICT DO NOTHING;
+INSERT INTO public.products OVERRIDING SYSTEM VALUE VALUES (19, 6, 1, 4033136, 'Комод 4 ящика Вишня светлая', 41200) ON CONFLICT DO NOTHING;
+INSERT INTO public.products OVERRIDING SYSTEM VALUE VALUES (20, 6, 4, 4028048, 'Тумба под ТВ ', 12350) ON CONFLICT DO NOTHING;
+
+
+--
+-- TOC entry 3469 (class 0 OID 20560)
+-- Dependencies: 222
+-- Data for Name: workshop_types; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.workshop_types OVERRIDING SYSTEM VALUE VALUES (1, 'Проектирование') ON CONFLICT DO NOTHING;
+INSERT INTO public.workshop_types OVERRIDING SYSTEM VALUE VALUES (2, 'Обработка') ON CONFLICT DO NOTHING;
+INSERT INTO public.workshop_types OVERRIDING SYSTEM VALUE VALUES (3, 'Сушка') ON CONFLICT DO NOTHING;
+INSERT INTO public.workshop_types OVERRIDING SYSTEM VALUE VALUES (4, 'Сборка') ON CONFLICT DO NOTHING;
+
+
+--
+-- TOC entry 3471 (class 0 OID 20568)
+-- Dependencies: 224
+-- Data for Name: workshops; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.workshops OVERRIDING SYSTEM VALUE VALUES (1, 1, 'Проектный', 4) ON CONFLICT DO NOTHING;
+INSERT INTO public.workshops OVERRIDING SYSTEM VALUE VALUES (2, 1, 'Расчетный', 5) ON CONFLICT DO NOTHING;
+INSERT INTO public.workshops OVERRIDING SYSTEM VALUE VALUES (3, 2, 'Раскроя', 5) ON CONFLICT DO NOTHING;
+INSERT INTO public.workshops OVERRIDING SYSTEM VALUE VALUES (4, 2, 'Обработки', 6) ON CONFLICT DO NOTHING;
+INSERT INTO public.workshops OVERRIDING SYSTEM VALUE VALUES (5, 3, 'Сушильный', 3) ON CONFLICT DO NOTHING;
+INSERT INTO public.workshops OVERRIDING SYSTEM VALUE VALUES (6, 2, 'Покраски', 5) ON CONFLICT DO NOTHING;
+INSERT INTO public.workshops OVERRIDING SYSTEM VALUE VALUES (7, 2, 'Столярный', 7) ON CONFLICT DO NOTHING;
+INSERT INTO public.workshops OVERRIDING SYSTEM VALUE VALUES (8, 2, 'Изготовления изделий из искусственного камня и композитных материалов', 3) ON CONFLICT DO NOTHING;
+INSERT INTO public.workshops OVERRIDING SYSTEM VALUE VALUES (9, 2, 'Изготовления мягкой мебели', 5) ON CONFLICT DO NOTHING;
+INSERT INTO public.workshops OVERRIDING SYSTEM VALUE VALUES (10, 4, 'Монтажа стеклянных, зеркальных вставок и других изделий', 2) ON CONFLICT DO NOTHING;
+INSERT INTO public.workshops OVERRIDING SYSTEM VALUE VALUES (11, 4, 'Сборки', 6) ON CONFLICT DO NOTHING;
+INSERT INTO public.workshops OVERRIDING SYSTEM VALUE VALUES (12, 4, 'Упаковки', 4) ON CONFLICT DO NOTHING;
+
+
+--
+-- TOC entry 3479 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: materials_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.materials_id_seq', 1, false);
+
+
+--
+-- TOC entry 3480 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: product_types_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.product_types_id_seq', 1, false);
+
+
+--
+-- TOC entry 3481 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: product_workshops_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.product_workshops_id_seq', 1, false);
+
+
+--
+-- TOC entry 3482 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: products_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.products_id_seq', 1, false);
+
+
+--
+-- TOC entry 3483 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: workshop_types_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.workshop_types_id_seq', 1, false);
+
+
+--
+-- TOC entry 3484 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: workshops_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.workshops_id_seq', 1, false);
+
+
+--
+-- TOC entry 3303 (class 2606 OID 20542)
+-- Name: materials materials_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.materials
+    ADD CONSTRAINT materials_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3305 (class 2606 OID 20550)
+-- Name: product_types product_types_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.product_types
+    ADD CONSTRAINT product_types_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3313 (class 2606 OID 20580)
+-- Name: product_workshops product_workshops_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.product_workshops
+    ADD CONSTRAINT product_workshops_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3307 (class 2606 OID 20558)
+-- Name: products products_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3309 (class 2606 OID 20566)
+-- Name: workshop_types workshop_types_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.workshop_types
+    ADD CONSTRAINT workshop_types_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3311 (class 2606 OID 20574)
+-- Name: workshops workshops_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.workshops
+    ADD CONSTRAINT workshops_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3317 (class 2606 OID 20596)
+-- Name: product_workshops product_workshops_id_product_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.product_workshops
+    ADD CONSTRAINT product_workshops_id_product_fkey FOREIGN KEY (id_product) REFERENCES public.products(id) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
+
+
+--
+-- TOC entry 3318 (class 2606 OID 20601)
+-- Name: product_workshops product_workshops_id_workshop_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.product_workshops
+    ADD CONSTRAINT product_workshops_id_workshop_fkey FOREIGN KEY (id_workshop) REFERENCES public.workshops(id) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
+
+
+--
+-- TOC entry 3314 (class 2606 OID 20581)
+-- Name: products products_id_material_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_id_material_fkey FOREIGN KEY (id_material) REFERENCES public.materials(id) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
+
+
+--
+-- TOC entry 3315 (class 2606 OID 20586)
+-- Name: products products_id_product_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_id_product_type_fkey FOREIGN KEY (id_product_type) REFERENCES public.product_types(id) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
+
+
+--
+-- TOC entry 3316 (class 2606 OID 20591)
+-- Name: workshops workshops_id_workshop_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.workshops
+    ADD CONSTRAINT workshops_id_workshop_type_fkey FOREIGN KEY (id_workshop_type) REFERENCES public.workshop_types(id) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
+
+
+-- Completed on 2025-06-06 22:07:17 MSK
+
+--
+-- PostgreSQL database dump complete
+--
+
